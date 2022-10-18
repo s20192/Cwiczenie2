@@ -12,21 +12,23 @@ namespace ExportProgram
             try
             {
                 FileInfo fileInfo = new(filepath);
-                StreamReader stream = new(fileInfo.OpenRead());
-                string? line = null;
-                int lineNumber = 0;
-                while ((line = stream.ReadLine()) != null)
+                using (StreamReader stream = new(fileInfo.OpenRead()))
                 {
-                   lineNumber++;
-                    try
+                    string? line = null;
+                    int lineNumber = 0;
+                    while ((line = stream.ReadLine()) != null)
                     {
-                        document.University.AddStudent(ParseStudent(line));
-                    }
-                    catch (MissingStudentDataException e)
-                    {
-                        _ = LogWriter.WriteToLogFile(e.Message.ToString() + ": Pominięto studenta o niepełnych danych (linia " + lineNumber + "): " + line);
-                        Console.WriteLine(e.Message + ", linia " + lineNumber);
-                        continue;
+                        lineNumber++;
+                        try
+                        {
+                            document.University.AddStudent(ParseStudent(line));
+                        }
+                        catch (MissingStudentDataException e)
+                        {
+                            _ = LogWriter.WriteToLogFile(e.Message.ToString() + ": Pominięto studenta o niepełnych danych (linia " + lineNumber + "): " + line);
+                            Console.WriteLine(e.Message + ", linia " + lineNumber);
+                            continue;
+                        }
                     }     
                 }
             } catch(DirectoryNotFoundException e)

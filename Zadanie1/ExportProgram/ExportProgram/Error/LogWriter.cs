@@ -5,8 +5,9 @@ namespace ExportProgram.Error
     {
         public static async Task WriteToLogFile(string message)
         {
-            using StreamWriter file = new(@"Data\Log.txt", append: true);
+            using StreamWriter file = new(@".\Log.txt", append: true);
             await file.WriteLineAsync(message);
+            file.Close();
         }
     }
 }
